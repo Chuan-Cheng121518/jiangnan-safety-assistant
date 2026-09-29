@@ -69,6 +69,6 @@ npm run demo
 
 | 微信赞助 | 支付宝赞助 |
 | :---: | :---: |
-| <img src="assets/sponsor/wechat.png" alt="微信自愿赞助收款码" width="280"> | <img src="assets/sponsor/alipay.jpg" alt="支付宝自愿赞助收款码" width="280"> |
+| <a href="https://raw.githubusercontent.com/Chuan-Cheng121518/jiangnan-safety-assistant/main/assets/sponsor/wechat.png"><img src="https://raw.githubusercontent.com/Chuan-Cheng121518/jiangnan-safety-assistant/main/assets/sponsor/wechat.png" alt="微信自愿赞助收款码" width="280"></a> | <a href="https://raw.githubusercontent.com/Chuan-Cheng121518/jiangnan-safety-assistant/main/assets/sponsor/alipay.jpg"><img src="https://raw.githubusercontent.com/Chuan-Cheng121518/jiangnan-safety-assistant/main/assets/sponsor/alipay.jpg" alt="支付宝自愿赞助收款码" width="280"></a> |
 
-可点击图片查看原图，再使用对应应用扫码。
+如果 README 中图片没有显示，可直接打开：[微信收款码原图](https://raw.githubusercontent.com/Chuan-Cheng121518/jiangnan-safety-assistant/main/assets/sponsor/wechat.png) · [支付宝收款码原图](https://raw.githubusercontent.com/Chuan-Cheng121518/jiangnan-safety-assistant/main/assets/sponsor/alipay.jpg)
