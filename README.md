@@ -69,6 +69,8 @@ npm run demo
 
 | 微信赞助 | 支付宝赞助 |
 | :---: | :---: |
-| <a href="https://raw.githubusercontent.com/Chuan-Cheng121518/jiangnan-safety-assistant/main/assets/sponsor/wechat.png"><img src="https://raw.githubusercontent.com/Chuan-Cheng121518/jiangnan-safety-assistant/main/assets/sponsor/wechat.png" alt="微信自愿赞助收款码" width="280"></a> | <a href="https://raw.githubusercontent.com/Chuan-Cheng121518/jiangnan-safety-assistant/main/assets/sponsor/alipay.jpg"><img src="https://raw.githubusercontent.com/Chuan-Cheng121518/jiangnan-safety-assistant/main/assets/sponsor/alipay.jpg" alt="支付宝自愿赞助收款码" width="280"></a> |
+| <a href="https://cdn.jsdelivr.net/gh/Chuan-Cheng121518/jiangnan-safety-assistant@main/assets/sponsor/wechat.png"><img src="https://cdn.jsdelivr.net/gh/Chuan-Cheng121518/jiangnan-safety-assistant@main/assets/sponsor/wechat.png" alt="微信自愿赞助收款码" width="280"></a> | <a href="https://cdn.jsdelivr.net/gh/Chuan-Cheng121518/jiangnan-safety-assistant@main/assets/sponsor/alipay.jpg"><img src="https://cdn.jsdelivr.net/gh/Chuan-Cheng121518/jiangnan-safety-assistant@main/assets/sponsor/alipay.jpg" alt="支付宝自愿赞助收款码" width="280"></a> |
 
-如果 README 中图片没有显示，可直接打开：[微信收款码原图](https://raw.githubusercontent.com/Chuan-Cheng121518/jiangnan-safety-assistant/main/assets/sponsor/wechat.png) · [支付宝收款码原图](https://raw.githubusercontent.com/Chuan-Cheng121518/jiangnan-safety-assistant/main/assets/sponsor/alipay.jpg)
+如果 README 中图片没有显示，可直接打开：[微信收款码原图](https://cdn.jsdelivr.net/gh/Chuan-Cheng121518/jiangnan-safety-assistant@main/assets/sponsor/wechat.png) · [支付宝收款码原图](https://cdn.jsdelivr.net/gh/Chuan-Cheng121518/jiangnan-safety-assistant@main/assets/sponsor/alipay.jpg)
+
+也可以打开仓库中的原文件：[微信文件](https://github.com/Chuan-Cheng121518/jiangnan-safety-assistant/blob/main/assets/sponsor/wechat.png) · [支付宝文件](https://github.com/Chuan-Cheng121518/jiangnan-safety-assistant/blob/main/assets/sponsor/alipay.jpg)
