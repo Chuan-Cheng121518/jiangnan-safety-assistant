@@ -1,4 +1,4 @@
-export const VERSION = '0.5.4';
+export const VERSION = '0.5.5';
 export const BASE = '/education/eductionTrainingCenter/';
 export const normalize = value => String(value ?? '').normalize('NFKC').replace(/\s+/g, ' ').trim();
 export const sameSet = (a, b) => JSON.stringify([...a].map(normalize).sort()) === JSON.stringify([...b].map(normalize).sort());

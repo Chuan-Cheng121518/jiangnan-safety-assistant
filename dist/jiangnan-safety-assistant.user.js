@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         江南大学实验室安全学习助手
 // @namespace    local.jiangnan.safety.assistant
-// @version      0.5.4
+// @version      0.5.5
 // @license      MIT (source code; bundled data retains its original rights)
 // @homepageURL  https://github.com/Chuan-Cheng121518/jiangnan-safety-assistant
 // @supportURL   https://github.com/Chuan-Cheng121518/jiangnan-safety-assistant/issues
@@ -19,7 +19,7 @@
 
 (()=>{
 'use strict';
-const VERSION = '0.5.4';
+const VERSION = '0.5.5';
 const BASE = '/education/eductionTrainingCenter/';
 const normalize = value => String(value ?? '').normalize('NFKC').replace(/\s+/g, ' ').trim();
 const sameSet = (a, b) => JSON.stringify([...a].map(normalize).sort()) === JSON.stringify([...b].map(normalize).sort());
