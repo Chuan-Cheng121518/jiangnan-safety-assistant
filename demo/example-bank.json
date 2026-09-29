@@ -1,0 +1,8 @@
+{
+  "version": 1,
+  "records": [
+    {"type":"single","stem":"演示题：请选择字母 B。","options":["字母 A","字母 B","字母 C"],"answers":["字母 B"],"source":"本地演示，非学校题库","explanation":"此题只用于测试选项文字匹配。"},
+    {"type":"multiple","stem":"演示题：请选择偶数。","options":["数字 1","数字 2","数字 4","数字 5"],"answers":["数字 2","数字 4"],"source":"本地演示，非学校题库"},
+    {"type":"boolean","stem":"演示题：二加二等于四。","options":["正确","错误"],"answers":["正确"],"source":"本地演示，非学校题库"}
+  ]
+}

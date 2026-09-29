@@ -1,0 +1,23 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><title>后台收录验证 · 本地模拟</title>
+<style>body{font:16px/1.7 system-ui;max-width:900px;margin:40px auto;padding:20px}button{padding:10px;margin:5px}pre{white-space:pre-wrap}label{display:block}</style>
+<h1>后台收录验证 · 本地模拟</h1><p>仅使用本地模拟题，不连接学校、不写入题库。使用真实收录模块及默认慢速间隔，运行 30 题约需 7 分钟。启动后切换其他标签页，再回来查看记录。</p>
+<button id="start">开始后台验证</button><button id="stop">暂停验证</button><a href="/demo/background-hold.html" target="_blank">切换到另一标签页</a><p id="status">未开始</p><pre id="stats"></pre><main id="page"></main><pre id="events"></pre>
+<script type="module">
+import {createBackgroundScheduler} from '/src/scheduler.js';
+import {createPracticeCollector} from '/src/collector.js';
+import {BASE} from '/src/core.js';
+location.hash='#'+BASE+'practiceCenter/practiceClass?background-test=1';
+const page=document.querySelector('#page'),out=document.querySelector('#stats'),events=document.querySelector('#events');
+const scheduler=createBackgroundScheduler(window);let count=0,index=0,started=0,hiddenSince=0,hiddenCount=0,afterFive=0;
+const log=[];const add=text=>{log.push(new Date().toISOString()+' '+text);events.textContent=log.join('\n');};
+function report(){out.textContent=JSON.stringify({elapsedSeconds:started?Math.round((Date.now()-started)/1000):0,saved:count,hiddenCount,afterFiveMinutesHidden:afterFive,visibility:document.visibilityState,timing:scheduler.state()},null,2);}
+document.addEventListener('visibilitychange',()=>{hiddenSince=document.hidden?Date.now():0;add('可见性：'+document.visibilityState);report();});
+function render(){
+page.innerHTML=`<form><div><span>单选题</span><div class="el-form-item"><div class="el-form-item__content"><span class="richText">本地后台验证题 ${index+1}</span><div class="options"><label class="el-radio"><input type="radio" name="answer" value="A"><span class="el-radio__label">A.<span class="richText">演示选项甲</span></span></label><label class="el-radio"><input type="radio" name="answer" value="B"><span class="el-radio__label">B.<span class="richText">演示选项乙</span></span></label></div></div></div></div><div id="feedback"></div><button type="button">确定</button></form>`;
+const b=page.querySelector('button');b.onclick=()=>{if(b.textContent==='下一题'){index++;render();}else{page.querySelector('#feedback').innerHTML='<span class="error">回答错误。</span>正确答案：B';b.textContent='下一题';}};
+}
+// The exact scheduler used by the shipped app is injected here as well.
+const runCollector=createPracticeCollector(window,{sleep:scheduler.sleep,store:()=>{count++;if(document.hidden)hiddenCount++;if(hiddenSince&&Date.now()-hiddenSince>=300000)afterFive++;add(`保存第 ${count} 题；${document.visibilityState}；持续隐藏 ${hiddenSince?Math.round((Date.now()-hiddenSince)/1000):0} 秒`);report();},status:s=>{document.querySelector('#status').textContent=s;report();}});
+document.querySelector('#start').onclick=async()=>{if(runCollector.state().active)return;count=0;index=0;hiddenCount=0;afterFive=0;started=Date.now();hiddenSince=document.hidden?Date.now():0;log.length=0;render();add('开始');await runCollector.start(30);report();};
+document.querySelector('#stop').onclick=()=>runCollector.stop();render();report();
+</script></html>

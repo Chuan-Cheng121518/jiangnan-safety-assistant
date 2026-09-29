@@ -1,0 +1,16 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {parseHTML} from 'linkedom';
+import {readQuestions,readCatalog,readCourse,readFeedback,applyAnswers} from '../src/adapter.js';
+import {makeRecord,matchQuestion} from '../src/core.js';
+function fixture(type='单选题',options=['选项甲','选项乙'],stem='这是题干'){const multi=type==='多选题';return `<div><span class="bold">${type}</span><div class="el-form-item"><div class="el-form-item__content"><div class="flex"><span class="richText">${stem}</span></div><div class="options"><div class="el-${multi?'checkbox':'radio'}-group">${options.map((o,i)=>`<div><label class="el-${multi?'checkbox':'radio'}"><input type="${multi?'checkbox':'radio'}" value="${String.fromCharCode(65+i)}"><span class="el-${multi?'checkbox':'radio'}__label">${String.fromCharCode(65+i)}.<span class="richText">${o}</span></span></label></div>`).join('')}</div></div></div></div></div>`;}
+const doc=html=>parseHTML(`<html><body><form>${html}</form></body></html>`).document;
+test('真实 Element 页面结构：三题分开定位，题型正确',()=>{const d=doc(fixture()+fixture('多选题')+fixture('判断题',['正确','错误']));const qs=readQuestions(d);assert.equal(qs.length,3);assert.deepEqual(qs.map(q=>q.type),['single','multiple','boolean']);assert.equal(qs[0].stem,'这是题干');assert.deepEqual(qs[0].options,['选项甲','选项乙']);assert.ok(qs.every(q=>!q.issue));});
+test('题块外侧单题正确反馈被识别，整卷不冒认每题正确',()=>{const d=doc(fixture()+'<div class="el-form-item"><div class="el-form-item__content"><div class="success">回答正确。</div></div></div>');assert.deepEqual(readFeedback(d,readQuestions(d)),{correct:true});const multi=doc(fixture()+fixture()+'<div class="success">回答正确。</div>');assert.equal(readFeedback(multi,readQuestions(multi)),null);});
+test('隐藏题目跳过；含图题与重复选项停止填选',()=>{assert.equal(readQuestions(doc(`<div style="display:none">${fixture()}</div>`)).length,0);assert.match(readQuestions(doc(fixture('单选题',['甲','乙'],'图题<img src="x">')))[0].issue,/图片/);assert.match(readQuestions(doc(fixture('单选题',['甲','甲'])))[0].issue,/重复/);});
+test('多选填选取消旧错误选项并保留全部正确选项',async()=>{const d=doc(fixture('多选题',['甲','乙','丙']));const q=readQuestions(d)[0];for(const label of q.labels){const input=label.querySelector('input');input.checked=false;label.addEventListener('click',()=>{input.checked=!input.checked;});}q.labels[1].querySelector('input').checked=true;await applyAnswers(q,['甲','丙'],()=>q.key);assert.deepEqual(q.labels.map(l=>l.querySelector('input').checked),[true,false,true]);});
+test('切题后旧答案填选被阻止',async()=>{const q=readQuestions(doc(fixture()))[0];await assert.rejects(applyAnswers(q,['选项甲'],()=> 'changed'),/变化/);});
+test('课程字段只读取平台状态，不把未通过当已通过',()=>{const d=doc('<img alt="DEMO01《演示》"><p>已完成</p><span>未通过</span><span>学习时长（秒）： <span>385</span> / -</span>');assert.deepEqual(readCourse(d),{title:'DEMO01《演示》',learning:'已完成',assessment:'未通过',seconds:385});});
+test('课程卡片仅读取当前页',()=>{const d=doc('<div class="i_item"><img alt="DEMO01《演示》"><div class="ta-l elp">DEMO01《演示》</div></div><div>共 118 条</div>');assert.equal(readCatalog(d).length,1);});
+test('选项前缀去除不破坏正文文字',()=>{const q=readQuestions(doc(fixture('单选题',['A 型设备','B 型设备'])))[0];assert.deepEqual(q.options,['A 型设备','B 型设备']);const bank=[makeRecord(q,['B 型设备'],'confirmed')];assert.equal(matchQuestion({...q,options:[...q.options].reverse()},bank).status,'confirmed');});
+export {fixture};

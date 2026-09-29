@@ -1,0 +1,26 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {normalize,questionKey,makeRecord,buildQuestionIndex,matchQuestion,mergeRecords,importBackup,importBank,exportCsv,courseState,routeKind,BASE} from '../src/core.js';
+const q={type:'single',stem:'相同前缀的题目甲',options:['甲','乙','丙']};
+test('选项换序按文字匹配，完整题干区分近似题',()=>{const r=makeRecord(q,['乙'],'confirmed');assert.equal(matchQuestion({...q,options:['丙','甲','乙']},[r]).status,'confirmed');assert.equal(matchQuestion({...q,stem:'相同前缀的题目乙'},[r]).status,'unknown');assert.notEqual(questionKey(q),questionKey({...q,options:['甲','乙','丁']}));});
+test('多选完整集合与答案冲突',()=>{const multi={...q,type:'multiple'};const a=makeRecord(multi,['甲','丙'],'confirmed');assert.deepEqual(matchQuestion(multi,[a]).answers,['甲','丙']);assert.equal(matchQuestion(multi,[a,makeRecord(multi,['乙'],'user')]).status,'conflict');});
+test('题库索引与数组匹配结果一致',()=>{const records=[makeRecord(q,['乙'],'confirmed'),makeRecord({...q,stem:'另一题'},['甲'],'user')];assert.deepEqual(matchQuestion(q,buildQuestionIndex(records)),matchQuestion(q,records));});
+test('未知题不会猜测答案',()=>{assert.equal(matchQuestion(q,[]).status,'unknown');assert.deepEqual(makeRecord(q).answers,[]);assert.throws(()=>makeRecord(q,['A'],'confirmed'));assert.throws(()=>makeRecord(q,[],'confirmed'));});
+test('重复题反馈去重，不同来源保留',()=>{const a=makeRecord(q,['甲'],'confirmed','平台');assert.equal(mergeRecords([a],[a]).length,1);assert.equal(mergeRecords([a],[makeRecord(q,['甲'],'confirmed','另一个来源')]).length,2);});
+test('索引合并保留原顺序并替换首个同身份记录',()=>{const a=makeRecord(q,['甲'],'confirmed','平台'),duplicate={...a,observedAt:'旧副本'},updated={...a,observedAt:'新记录'},extra=makeRecord({...q,stem:'新题'},['乙'],'user','手动');const merged=mergeRecords([a,duplicate],[updated,extra]);assert.equal(merged.length,3);assert.equal(merged[0],updated);assert.equal(merged[1],duplicate);assert.equal(merged[2],extra);});
+test('CSV 换行、引号、逗号与中文可往返',()=>{const sample={...q,stem:'题目\n带有,"引号"'};const r=makeRecord(sample,['甲'],'confirmed','来源,一');const imported=importBank(exportCsv([r]),'csv');assert.equal(imported[0].stem,sample.stem);assert.equal(imported[0].status,'user');assert.deepEqual(imported[0].answers,['甲']);});
+test('导入不能冒充平台确认，非法记录整批失败',()=>{assert.equal(importBank(JSON.stringify([makeRecord(q,['甲'],'confirmed')]),'json')[0].status,'user');assert.throws(()=>importBank(JSON.stringify([q,{...q,answers:['不存在']}]),'json'));assert.throws(()=>importBank('type,stem,options,answers\n"broken','csv'));assert.throws(()=>importBank('a'.repeat(5*1024*1024+1),'json'));});
+test('版本2备份同时读取题目与分类，版本1继续兼容',()=>{const record=makeRecord(q,['甲'],'confirmed'),category={version:1,id:'paper-1',title:'试剂安全',expectedCount:2,questionKeys:[record.key],updatedAt:'2026-09-21'};const v2=importBackup(JSON.stringify({version:2,records:[record],categories:[category]}),'json');assert.equal(v2.version,2);assert.equal(v2.records[0].status,'user');assert.deepEqual(v2.categories,[category]);const v1=importBackup(JSON.stringify({version:1,records:[record]}),'json');assert.equal(v1.version,1);assert.equal(v1.records.length,1);assert.deepEqual(v1.categories,[]);assert.throws(()=>importBackup(JSON.stringify({version:3,records:[]}),'json'),/版本/);});
+test('重复选项、多答案单选、空选项被拒绝',()=>{assert.throws(()=>makeRecord({...q,options:['甲','甲']}));assert.throws(()=>makeRecord(q,['甲','乙'],'user'));assert.throws(()=>makeRecord({...q,options:['甲',' ']}));});
+test('学习与考核分别核验，不由视频结束推断完成',()=>{assert.equal(courseState({learning:'进行中',assessment:'未通过'},true),'视频已结束（不代表平台考核通过）');assert.equal(courseState({learning:'已完成',assessment:''}),'学习已完成，考核状态待核验');assert.equal(courseState({learning:'已完成',assessment:'已通过'}),'平台已确认完成');});
+test('学习、练习和考试入口按完整路径范围识别',()=>{
+  assert.equal(routeKind('#'+BASE+'examCenter'),'exam');
+  assert.equal(routeKind('#'+BASE+'examCenter/examing?testPaperId=1'),'exam');
+  assert.equal(routeKind('#'+BASE+'examCenterExtra/examing'),'unsupported');
+  assert.equal(routeKind('#/other/examCenter/examing'),'unsupported');
+  assert.equal(routeKind('#'+BASE+'practiceCenter/practiceClass?id=1'),'practice');
+  assert.equal(routeKind('#'+BASE+'learningCenter/learning/abc'),'course');
+  assert.equal(routeKind('#'+BASE+'learningCenter/learning/abc/learningExaming?learningMaterialId=abc'),'practice');
+  assert.equal(routeKind('#/other/practiceCenter/'),'unsupported');
+});
+test('规范化不删除否定词或标点',()=>{assert.equal(normalize('  Ａ\nＢ '),'A B');assert.notEqual(normalize('可以'),normalize('不可以'));});

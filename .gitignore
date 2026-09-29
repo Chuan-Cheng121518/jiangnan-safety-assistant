@@ -1,0 +1,14 @@
+node_modules/
+backups/
+outputs/
+*.log
+*.sqlite
+*.db
+.env
+.env.*
+!.env.example
+dist/*.bank.json
+dist/*.report.json
+dist/sqlite-demo-data.json
+.DS_Store
+Thumbs.db
