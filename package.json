@@ -6,6 +6,8 @@
   "description": "江南大学实验室安全学习与练习本地助手",
   "scripts": {
     "build": "node scripts/build.mjs",
+    "docs:bank": "node scripts/generate-readable-bank.mjs",
+    "docs:check": "node scripts/generate-readable-bank.mjs --check",
     "test": "node --test tests/*.test.mjs",
     "demo": "node scripts/serve.mjs"
   },

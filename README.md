@@ -10,6 +10,8 @@
 
 **[安装最新版脚本](https://github.com/Chuan-Cheng121518/jiangnan-safety-assistant/releases/latest/download/jiangnan-safety-assistant.user.js)** · **[查看版本发布](https://github.com/Chuan-Cheng121518/jiangnan-safety-assistant/releases)**
 
+**[直接阅读题库与参考答案](docs/question-bank/index.md)** · [按题型找题](docs/question-bank/types/index.md) · [20 个课程小节题库](docs/question-bank/courses/index.md)
+
 ## 功能
 
 - **20 小节一键答题与提交**：按课程编号和完整题目匹配答案，依次打开小节、恢复选项、点击平台原生提交按钮；读到课程详情“考核 已通过”后才继续。已通过的小节会跳过；1 个归档时无配套考核的小节会跳过。可暂停、继续、导出处理记录。
@@ -28,7 +30,9 @@
 
 ## 实验室安全考试题库与答案资料
 
-项目内已经收录可供复习和查题的实验室安全资料。如果你正在寻找“江南大学实验室安全考试题库”“实验室安全考试答案”“实验室安全练习题”或某一道题的选项，可以先在本项目页搜索题干，再打开对应数据文件核对：
+项目内已经收录可供复习和查题的实验室安全资料。如果你正在寻找“江南大学实验室安全考试题库”“实验室安全考试答案”“实验室安全练习题”或某一道题的选项，可以直接打开[可读题库总目录](docs/question-bank/index.md)，无需安装脚本即可阅读题干、完整选项、参考答案及来源证据。
+
+综合题库按题号分为 51 页，每页最多 100 题；另有[单选、多选、判断题索引](docs/question-bank/types/index.md)和[课程目录](docs/question-bank/courses/index.md)。进入索引或分页后，可用浏览器查找（Ctrl + F）搜索当前页题干；跨页全文查题可使用脚本内搜索或下载原始 JSON。题目存在差异时，各收录记录分别展示；[20 道来源冲突题](docs/question-bank/reference/conflicts.md)和[5 道需人工核对题](docs/question-bank/reference/manual-review.md)有独立入口。
 
 - **综合题库**：[`data/reference-bank.json`](data/reference-bank.json)，共 5099 个题目标识、13030 条来源记录；其中 5094 题可以按题干和选项结构匹配，冲突题和无法可靠匹配的题目会标出并留给人工核对。
 - **课程小节题库**：[`data/course-practice.json`](data/course-practice.json)，对应 20 个课程小节、37 道题目，包含题干、完整选项、收录答案和平台反馈来源。
@@ -66,11 +70,15 @@
 npm ci --ignore-scripts
 npm test
 npm run build
+npm run docs:bank
+npm run docs:check
 node --check dist/jiangnan-safety-assistant.user.js
 npm run demo
 ```
 
 默认构建从仓库内 `data/reference-bank.json` 嵌入完整参考题库，课程题库在 `src/practice-bank.js`。输出为 `dist/jiangnan-safety-assistant.user.js`。源码下载后即可构建，不依赖维护者本机路径或备份。
+
+可读题库位于 `docs/question-bank/`，由两个 `data/*.json` 原始文件生成。题库更新后运行 `npm run docs:bank`，将数据和阅读版一并提交；持续集成会检查两者一致。生成过程不修改原始题库，网页能直接阅读并不保证搜索引擎或 AI 立即收录。
 
 可使用 `node scripts/build.mjs --bank 自定义参考快照.json`，或使用符合项目结构的 SQLite：`node scripts/build.mjs --sqlite 题库.sqlite`。本地演示位于 `http://127.0.0.1:8766`，仅使用浏览器生成的测试页面。
 
