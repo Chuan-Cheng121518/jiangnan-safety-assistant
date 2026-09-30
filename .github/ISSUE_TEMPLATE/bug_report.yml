@@ -1,0 +1,36 @@
+name: 脚本故障与安装问题
+description: 报告可复现的安装、界面或兼容性问题。
+title: "[故障] "
+body:
+  - type: markdown
+    attributes:
+      value: 请先查阅已有 Issues。截图请遮挡姓名、学号；不要上传密码、Cookie、令牌或完整浏览器数据。
+  - type: input
+    id: environment
+    attributes:
+      label: 使用环境
+      description: 脚本版本、浏览器与 Tampermonkey 版本。
+      placeholder: v0.5.5 / Edge 版本 / Tampermonkey 版本
+    validations:
+      required: true
+  - type: input
+    id: page
+    attributes:
+      label: 页面栏目
+      placeholder: 学习中心、练习中心、考试列表等；无需填写带账号或令牌的完整地址。
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: 复现步骤
+      description: 从打开哪个页面开始，点击了什么，何时出现问题。
+    validations:
+      required: true
+  - type: textarea
+    id: result
+    attributes:
+      label: 预期结果与实际结果
+      description: 可附遮挡个人信息后的截图或错误文字。
+    validations:
+      required: true

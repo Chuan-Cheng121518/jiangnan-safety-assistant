@@ -1,0 +1,28 @@
+name: 题库纠错与来源补充
+description: 提供题号、课程和可核对的依据，保留冲突来源。
+title: "[题库] "
+body:
+  - type: markdown
+    attributes:
+      value: 公开题库是历史参考资料。请仅提交有权分享的内容，遮挡个人信息；新旧答案冲突时请同时保留证据。
+  - type: input
+    id: question
+    attributes:
+      label: 题目标识或课程代码
+      placeholder: 综合题库题目 123，或课程 JCTZ06 / 习题 2
+    validations:
+      required: true
+  - type: textarea
+    id: content
+    attributes:
+      label: 完整题干、选项与当前参考答案
+      description: 保留原始顺序、单位和否定词；可附对应阅读页链接。
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: 问题说明与纠错依据
+      description: 描述差异，提供来源、观察日期和可分享的反馈；无法确认时请说明。
+    validations:
+      required: true

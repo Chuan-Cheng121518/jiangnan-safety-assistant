@@ -1,10 +1,10 @@
 # 江南大学实验室安全学习助手
 
-> 面向江南大学实验室安全平台的非官方学习辅助工具，适合课程学习、练习整理、错题复习和考试前自查，同时支持一键学习（懂的都懂）。
+> 江南大学实验室安全考试与学习辅助脚本（非官方）。内置 5099 道综合题库与参考答案、20 个课程小节的 37 道习题，支持查题、错题复习、课程答题提交和考试答案辅助填入。
 
-这个 GitHub 项目页就是项目的介绍、安装和更新页面。项目兼容江南大学实验室安全平台（`jnlab.jiangnan.edu.cn`），使用浏览器用户脚本在本地辅助题库管理和页面操作；它不是学校官方系统，也不替代课程要求或正式考试。
+`jiangnan-safety-assistant` 是面向江南大学实验室安全平台（`jnlab.jiangnan.edu.cn`）的 Tampermonkey 用户脚本。本 GitHub 项目页提供介绍、题库阅读、安装和更新入口。个人题库保存在浏览器本地；学校名称仅用于说明兼容范围。
 
-常见搜索场景包括：江南大学实验室安全考试复习、江南大学实验室安全平台题库、实验室安全练习错题整理、实验室安全学习助手安装、Tampermonkey 实验室安全脚本。
+**Jiangnan University Lab Safety Assistant** is an unofficial Tampermonkey userscript for laboratory safety study and exam preparation on `jnlab.jiangnan.edu.cn`. It includes a readable question bank with reference answers, course exercises, local review tools and assisted answer selection. Historical answers may be outdated or conflicting; exam submission remains under the user's control.
 
 当前版本：`v0.5.5`。完整发布包含源码、5099 道综合题库、20 个课程小节的 37 道考核题与答案，以及可直接安装的用户脚本。
 
@@ -12,13 +12,28 @@
 
 **[直接阅读题库与参考答案](docs/question-bank/index.md)** · [按题型找题](docs/question-bank/types/index.md) · [20 个课程小节题库](docs/question-bank/courses/index.md)
 
-## 功能
+## 快速开始：查题、安装或反馈
+
+| 你想做什么 | 入口 |
+| --- | --- |
+| 不装脚本，直接查实验室安全题目与参考答案 | [题库总目录](docs/question-bank/index.md) · [题型索引](docs/question-bank/types/index.md) |
+| 按课程名称找小节习题 | [20 个课程小节](docs/question-bank/courses/index.md) |
+| 安装或更新浏览器脚本 | [安装与升级](#安装与升级) · [最新版本](https://github.com/Chuan-Cheng121518/jiangnan-safety-assistant/releases/latest) |
+| 反馈题库差异或脚本故障 | [提交反馈](https://github.com/Chuan-Cheng121518/jiangnan-safety-assistant/issues/new/choose) · [贡献说明](CONTRIBUTING.md) |
+
+## 功能：课程学习、题库检索与考试辅助填入
 
 - **20 小节一键答题与提交**：按课程编号和完整题目匹配答案，依次打开小节、恢复选项、点击平台原生提交按钮；读到课程详情“考核 已通过”后才继续。已通过的小节会跳过；1 个归档时无配套考核的小节会跳过。可暂停、继续、导出处理记录。
 - **考试辅助填入**：按完整题干、题型和选项文字查本地题库，支持单题及本页批量填入，默认保留已作答题，正式试卷交卷由使用者操作。
 - **练习收录**：分类练习逐题读取平台正确反馈；模拟练习支持保存整卷题目及收录结果页明确显示的答案，保留来源与冲突。
 - **独立本地存储**：个人题库使用 Tampermonkey GM 存储，支持 JSON/CSV 导入导出及分类索引；内置参考库不覆盖个人记录。
 - **课程播放清单**：正常 1 倍速播放，视频自然结束后可继续下一门，课程完成与考核通过均以平台显示为准。
+
+## 界面示例：本地练习与答案依据
+
+![江南学习助手本地演示：左侧合成练习题，右侧为练习收录与答案依据面板](assets/screenshots/local-demo.jpg)
+
+上图为项目自带演示页的实际截图，题目、反馈和存储记录均为合成测试资料，不是学校平台截图或真实考试结果。开发者可按下方构建步骤运行 `npm run demo`，在本机打开 `http://127.0.0.1:8766` 体验；线上查题直接使用[可读题库](docs/question-bank/index.md)。
 
 ## 适合谁使用
 
@@ -96,7 +111,7 @@ npm run demo
 
 ### 它能替我完成正式考试吗？
 
-它用于课程学习、练习收录、本地题库复习和页面内答案辅助。正式考试的作答、核对和交卷仍由使用者本人决定并操作，不能保证任何考试结果（此为保守性回答）。真实测试结果已通过，支持一键填入。
+它支持根据当前页面的完整题目匹配本地资料，并辅助填入已匹配的选项；正式考试不会自动交卷。使用者需要核对答案并自行操作，项目不保证考试结果。课程小节的批量提交是单独的功能，具体限制见“暂停和异常处理”。
 
 ### 如何安装？
 
@@ -104,7 +119,7 @@ npm run demo
 
 ### 题库答案一定正确吗？
 
-不一定。内置题库是参考资料；题目、选项或平台规则变化时，应以当前页面反馈和学校要求为准。冲突题和无法可靠匹配的题目会保留给用户人工确认。脚本能确保85%的正确率，因为有部分图片试题，暂时没有适配视觉模型，脚本做完之后手动完成几道题即可通过考试。
+不一定。内置题库是参考资料；题目、选项或平台规则变化时，应以当前页面反馈和学校要求为准。冲突题和无法可靠匹配的题目会保留给用户人工确认。图片题尚未适配；当前没有足以支持固定正确率或通过率的公开评测，自动测试通过也不代表题库答案全部正确。
 
 ### 项目里有实验室安全考试题库和答案吗？
 
@@ -113,6 +128,22 @@ npm run demo
 ### 题库会上传到服务器吗？
 
 脚本将个人题库保存在当前浏览器的 Tampermonkey 本地存储中，不主动上传账号信息或题库。更新脚本前请先导出个人题库备份。
+
+### 不安装脚本也能查题吗？
+
+可以。[题库阅读页](docs/question-bank/index.md)直接展示题干、选项、参考答案和来源证据。浏览器查找只检索当前页；需要跨页检索时，可使用脚本内题库搜索或下载原始 JSON。目录与数据差异说明见 [DATA.md](DATA.md)。
+
+### 其他学校或其他学习平台可以使用吗？
+
+当前页面操作针对 `jnlab.jiangnan.edu.cn` 适配，不能因题目相似就推断兼容其他网站。公开题库可阅读参考，脚本兼容范围与资料适用范围需要分别核对。
+
+## 问题反馈与参与维护
+
+请先查看 [已有 Issues](https://github.com/Chuan-Cheng121518/jiangnan-safety-assistant/issues)，再使用[故障反馈或题库纠错模板](https://github.com/Chuan-Cheng121518/jiangnan-safety-assistant/issues/new/choose)。说明脚本版本、浏览器、复现步骤；题库问题请提供题号或课程代码与依据，并遮挡截图中的账号信息。
+
+欢迎补充可复现的兼容性问题、完善安装说明和提交有来源的题库纠错，流程见 [CONTRIBUTING.md](CONTRIBUTING.md)。有帮助的话可以 Star 收藏，或向需要的同学分享项目主页；实际修复和资料更新会写入提交或版本说明。
+
+维护者可参考[项目展示与检索维护说明](docs/discoverability.md)检查 About、Topics 和搜索命中情况。
 
 项目自研代码和文档使用 [MIT License](LICENSE)。随附第三方题目与答案保留原有权利，不因打包进脚本而取得 MIT 授权。反馈问题时请去掉账号、学号、Cookie 等个人信息。
 

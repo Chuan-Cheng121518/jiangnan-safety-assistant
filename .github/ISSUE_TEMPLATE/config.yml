@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: 安装说明与常见问题
+    url: https://github.com/Chuan-Cheng121518/jiangnan-safety-assistant#安装与升级
+    about: 安装或更新前先阅读说明并导出个人题库备份。
+  - name: 在线题库与参考答案
+    url: https://github.com/Chuan-Cheng121518/jiangnan-safety-assistant/blob/main/docs/question-bank/index.md
+    about: 按题型、题号或课程查看现有资料与来源。
